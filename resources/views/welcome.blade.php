@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Vue & Laravel</title>
 
@@ -80,8 +81,12 @@
             @endif
 
             <div class="content">
-                <div class="title m-b-md">
+                <div  class="title m-b-md">
                     Vue & Laravel
+                </div>
+
+                <div id="app">
+                    <example-component></example-component>
                 </div>
 
                 {{--<div class="links">--}}
@@ -93,6 +98,7 @@
                     {{--<a href="https://forge.laravel.com">Forge</a>--}}
                     {{--<a href="https://github.com/laravel/laravel">GitHub</a>--}}
                 {{--</div>--}}
+                <script src="{{asset('js/app.js')}}"></script>
             </div>
         </div>
     </body>

@@ -15,7 +15,17 @@ import VueAxios from 'vue-axios';
 import axios from 'axios';
 Vue.use(VueAxios, axios);
 
-import HomeComponent from './components/HomeComponent.vue';
+
+import Posts from './components/PostsComponent.vue';
+import CreatePost from './components/CreatePostComponent.vue';
+import ShowPost from './components/ShowPostComponent.vue';
+import EditPost from './components/EditPostComponent.vue';
+Vue.component('posts', Posts);
+Vue.component('create', CreatePost);
+Vue.component('posts', ShowPost);
+Vue.component('posts', EditPost);
+
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -26,9 +36,12 @@ import HomeComponent from './components/HomeComponent.vue';
  */
 
 // const files = require.context('./', true, /\.vue$/i);
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));z
+// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+
+
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -38,33 +51,36 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const routes = [
     {
-        name: 'home',
+        name: 'posts',
         path: '/',
-        component: HomeComponent
+        component: Posts
+    },
+    {
+        name: 'show',
+        path: '/show/:id',
+        component: ShowPost
+    },
+    {
+        name: 'create',
+        path: '/create',
+        component: CreatePost
+    },
+    {
+        name: 'edit',
+        path: '/edit/:id',
+        component: EditPost
     }
-    // {
-    //     name: 'create',
-    //     path: '/create',
-    //     component: CreateComponent
-    // },
-    // {
-    //     name: 'posts',
-    //     path: '/posts',
-    //     component: IndexComponent
-    // },
-    // {
-    //     name: 'edit',
-    //     path: '/edit/:id',
-    //     component: EditComponent
-    // }
 ];
 
-const router = new VueRouter({ mode: 'history'});
-const app = new Vue(Vue.util.extend({ router })).$mount('#app');
+// const router = new VueRouter({ mode: 'history', routes: routes});
+// const app = new Vue(Vue.util.extend({ router }, Posts));
+const router = new VueRouter({ routes })
+
+const app = new Vue({ router }).$mount('#app')
 
 // const app = new Vue({
 //     el: '#app',
-//     components: {
-//         'example-component': require('./components/ExampleComponent.vue'),
-//     }
+//     // template: '<notification/>',
+//     // router,
+//     // render: h => h(App)
 // });

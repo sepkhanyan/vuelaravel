@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Events\NewMessage;
 use App\Image;
 use App\Post;
@@ -62,8 +63,12 @@ class PostController extends Controller
 
     public function edit($id)
     {
+        $comments = Comment::where('post_id', $id)->get();
         $post = Post::find($id);
-        return response()->json($post);
+        return response()->json([
+            'post' => $post,
+            'comments' => $comments
+        ]);
     }
 
     public function update($id, Request $request)
@@ -92,6 +97,12 @@ class PostController extends Controller
         $post = Post::find($id);
         return response()->json($post);
         //
+    }
+
+    public function comments($id)
+    {
+        $comments = Comment::where('post_id', $id)->get();
+        return response()->json($comments);
     }
 
     public function destroy($id)

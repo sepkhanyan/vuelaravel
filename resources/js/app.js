@@ -20,10 +20,12 @@ import Posts from './components/PostsComponent.vue';
 import CreatePost from './components/CreatePostComponent.vue';
 import ShowPost from './components/ShowPostComponent.vue';
 import EditPost from './components/EditPostComponent.vue';
+import Comments from './components/PostCommentsComponent.vue';
 Vue.component('posts', Posts);
 Vue.component('create', CreatePost);
 Vue.component('posts', ShowPost);
 Vue.component('posts', EditPost);
+Vue.component('comments', Comments);
 
 
 
@@ -58,6 +60,11 @@ const routes = [
     {
         name: 'show',
         path: '/show/:id',
+        component: ShowPost
+    },
+    {
+        name: 'comments',
+        path: '/comments/:id',
         component: ShowPost
     },
     {

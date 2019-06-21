@@ -6,8 +6,9 @@
                     <i class="fa fa-angle-double-left"></i>
                     Back
                 </router-link>
-                <br/>
-                <div class="panel-heading">Post Detail</div>
+                <div class="panel-heading">
+                    <h1>Post Detail</h1>
+                </div>
 
                 <div class="panel-body">
                     <br/>
@@ -20,6 +21,15 @@
                 </div>
             </div>
         </div>
+        <br/>
+            <router-link :to="{name: 'comments'}" class="nav-link">Comments</router-link>
+
+        <br/>
+        <!--<router-view name="companiesIndex"></router-view>-->
+        <!--<router-view></router-view>-->
+        <transition name="comments">
+            <router-view></router-view>
+        </transition>
     </div>
 </template>
 
@@ -36,13 +46,18 @@
     export default {
         data() {
             return {
-                post: {}
+                post: {},
+                comments: []
             }
         },
         created() {
             axios.get(`/post/edit/${this.$route.params.id}`).then((response) => {
                 this.post = response.data;
+                this.comment = response.comments;
             });
         },
+        methods : {
+
+        }
     }
 </script>

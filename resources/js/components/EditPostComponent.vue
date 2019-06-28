@@ -12,7 +12,10 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Post Title:</label>
-                        <input type="text" class="form-control" v-model="post.title" >
+                        <input type="text" class="form-control" v-model="post.title" :class="{ 'is-invalid': errors.title }">
+                        <span class="invalid-feedback" v-if="errors.title">
+                                <strong>{{ errors.title[0] }}</strong>
+                            </span>
                     </div>
                 </div>
             </div>
@@ -20,23 +23,43 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Post Description:</label>
-                        <textarea class="form-control" v-model="post.description" rows="5"></textarea>
+                        <textarea class="form-control" v-model="post.description" rows="5" :class="{ 'is-invalid': errors.description }"></textarea>
+                        <span class="invalid-feedback" v-if="errors.description">
+                                <strong>{{ errors.description[0] }}</strong>
+                            </span>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
                     <label>Post Main Image:</label>
-                    <input type="file" v-on:change="onImageChange" class="form-control">
+                    <input type="file" v-on:change="onImageChange" class="form-control" :class="{ 'is-invalid': errors.image }">
+                    <span class="invalid-feedback" v-if="errors.image">
+                                <strong>{{ errors.image[0] }}</strong>
+                            </span>
                 </div>
             </div>
-            <!--<br/>-->
-            <!--<div class="row">-->
-                <!--<div class="col-md-6">-->
-                    <!--<label>Post Images:</label>-->
-                    <!--<input type="file" multiple="multiple" v-on:change="onMultipleImageChange" class="form-control">-->
-                <!--</div>-->
-            <!--</div>-->
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Post Images:</label>
+                    <input type="file" multiple="multiple" v-on:change="onMultipleImageChange" class="form-control">
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="thumbnail">
+                        <span class="pip" v-for="image,index in images">
+                                 <img :src="'/images/' + image.title" class="imageThumb"/>
+                                    <br/>
+                                    <span v-on:click="deleteImage(image.id, index)"  class="remove" id="removeImage">
+                                        <i class="fa fa-times-circle"></i>
+                                    </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
             <br/>
             <div class="row">
                 <div class="col-xs-12 form-group">
@@ -46,37 +69,97 @@
         </form>
     </div>
 </template>
+<style>
+    .imageThumb {
+        max-height: 100px;
+        border: 1px solid;
+        padding: 0px;
+    }
+
+    .pip {
+        display: inline-block;
+        margin: 10px 10px 0 0;
+    }
+
+    .remove {
+        display: block;
+        /*background: #444;*/
+        /*border: 1px solid black;*/
+        /*color: white;*/
+        text-align: center;
+        cursor: pointer;
+    }
+</style>
 
 <script>
     export default {
         data() {
             return {
+                errors : {},
                 post: {},
-                formData: new FormData()
+                images: [],
+                formData: new FormData(),
+                attachments: []
             }
         },
         created() {
             axios.get(`/post/edit/${this.$route.params.id}`).then((response) => {
-                this.post = response.data;
+                this.post = response.data.post;
+                this.images = response.data.images;
             });
         },
         methods: {
+            onMultipleImageChange(e) {
+                let selectedFiles=e.target.files;
+                if(!selectedFiles.length){
+                    return false;
+                }
+                for(let i=0; i < selectedFiles.length; i++){
+                    this.attachments.push(selectedFiles[i]);
+                }
+                console.log(this.attachments);
+
+            },
             onImageChange(e) {
                 console.log(e.target.files[0]);
                 this.image = e.target.files[0];
             },
+            deleteImage(id, index) {
+                if (confirm("Do you really want to delete this image?")) {
+
+                    axios.post('/image/delete/' + id)
+                        .then(response => {
+                            this.images.splice(index, 1);
+                        })
+                        .catch(response => {
+                            alert("Could not delete image");
+                        });
+                }
+            },
 
             updatePost() {
-                this.errors = {};
+
 
                 const config = { headers: {'Content-Type' : 'multipart/form-data' }};
-                this.formData.append('image', this.image);
+
+                for(let i=0; i < this.attachments.length; i++){
+                    this.formData.append('pics[]',this.attachments[i]);
+                }
+
+                if(this.image){
+                    this.formData.append('image', this.image);
+                }
+
                 this.formData.append('title', this.post.title);
                 this.formData.append('description', this.post.description);
                 this.formData.append('_method', 'POST');
-              axios.post(`/post/update/${this.$route.params.id}`, this.formData, config).then((response) => {
-                    this.$router.push({name: 'posts'});
-                });
+              axios.post(`/post/update/${this.$route.params.id}`, this.formData, config)
+                  .then((response) => {
+                  this.$router.push({path: '/'});
+                })
+                  .catch(error => {
+                      this.errors = error.response.data.errors
+                  });
             }
         }
         //

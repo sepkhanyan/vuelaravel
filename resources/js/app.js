@@ -21,11 +21,17 @@ import CreatePost from './components/CreatePostComponent.vue';
 import ShowPost from './components/ShowPostComponent.vue';
 import EditPost from './components/EditPostComponent.vue';
 import Comments from './components/PostCommentsComponent.vue';
+import Users from './components/UsersComponent.vue';
+import EditUser from './components/EditUserComponent.vue';
+
+
 Vue.component('posts', Posts);
 Vue.component('create', CreatePost);
 Vue.component('posts', ShowPost);
 Vue.component('posts', EditPost);
 Vue.component('comments', Comments);
+Vue.component('users', Users);
+
 
 
 
@@ -58,25 +64,30 @@ const routes = [
         component: Posts
     },
     {
-        name: 'show',
-        path: '/show/:id',
+        name: 'post/show',
+        path: '/post/show/:id',
         component: ShowPost
     },
     {
-        name: 'comments',
-        path: '/comments/:id',
-        component: ShowPost
-    },
-    {
-        name: 'create',
-        path: '/create',
+        name: 'post/create',
+        path: '/post/create',
         component: CreatePost
     },
     {
-        name: 'edit',
-        path: '/edit/:id',
+        name: 'post/edit',
+        path: '/post/edit/:id',
         component: EditPost
-    }
+    },
+    {
+        name: 'users',
+        path: '/users',
+        component: Users
+    },
+    {
+        name: 'user/edit',
+        path: '/user/edit/:id',
+        component: EditUser
+    },
 ];
 
 // const router = new VueRouter({ mode: 'history', routes: routes});

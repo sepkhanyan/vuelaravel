@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="form-group">
-            <router-link :to="{name: 'create'}" class="btn btn-primary">Add new Post</router-link>
+            <router-link :to="{name: 'post/create'}" class="btn btn-primary">Add new Post</router-link>
+
+            <router-link :to="{name: 'users'}" class="btn btn-success">Users</router-link>
         </div>
 
         <div class="panel panel-default">
@@ -17,19 +19,19 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="post in posts">
+                    <tr v-for="post, index in posts">
                         <td>{{ post.title }}</td>
                         <td>{{ post.description }}</td>
                         <td><img :src="'/images/' + post.image" /></td>
                         <td class="action">
 
-                                <router-link v-if="user.is_admin == 1" :to="{name: 'edit', params: {id: post.id}}" class="btn btn-primary">
+                                <router-link v-if="user.is_admin == 1" :to="{name: 'post/edit', params: {id: post.id}}" class="btn btn-primary">
                                     <i class="fa fa-pencil"></i>
                                 </router-link>
-                                <router-link  v-else-if="user.id == post.user_id" :to="{name: 'edit', params: {id: post.id}}" class="btn btn-primary">
+                                <router-link  v-else-if="user.id == post.user_id" :to="{name: 'post/edit', params: {id: post.id}}" class="btn btn-primary">
                                     <i class="fa fa-pencil"></i>
                                 </router-link>
-                                <router-link  :to="{name: 'show', params: {id: post.id}}" class="btn btn-success">
+                                <router-link  :to="{name: 'post/show', params: {id: post.id}}" class="btn btn-success">
                                     <i class="fa fa-eye"></i>
                                 </router-link>
                                 <a href="#" v-if="user.is_admin == 1"

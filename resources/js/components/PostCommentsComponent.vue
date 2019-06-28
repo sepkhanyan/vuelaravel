@@ -1,14 +1,33 @@
 <template>
-    <div class="container">
-       There will be comments
+
+    <div>
+                <p class="author">
+                    {{comment.author}}
+                </p>
+                <p  class="content-comment">
+                    {{comment.content}}
+                </p>
+
     </div>
+
+
 </template>
 
+<style>
+
+    .author{
+        /*margin: 10px 0;*/
+        font-weight: bold;
+    }
+</style>
 
 <script>
     export default {
-        mounted() {
-            console.log('comments')
-        }
+        data() {
+            return {
+
+            }
+        },
+        props : ['comment'],
     }
 </script>
